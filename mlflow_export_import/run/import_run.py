@@ -66,7 +66,8 @@ def import_run(
 
     mlflow_client = mlflow_client or create_mlflow_client()
     http_client = create_http_client(mlflow_client)
-    if utils.calling_databricks():
+    in_databricks = "DATABRICKS_RUNTIME_VERSION" in os.environ
+    if in_databricks and utils.calling_databricks():
         dbx_client = create_dbx_client(mlflow_client)
     else:
         dbx_client = None
@@ -76,7 +77,6 @@ def import_run(
     exp = mlflow_utils.set_experiment(mlflow_client, dbx_client, experiment_name)
     src_run_path = os.path.join(input_dir, "run.json")
     src_run_dct = io_utils.read_file_mlflow(src_run_path)
-    in_databricks = "DATABRICKS_RUNTIME_VERSION" in os.environ
 
     run = mlflow_client.create_run(exp.experiment_id)
     run_id = run.info.run_id
@@ -111,7 +111,7 @@ def import_run(
             e, f"Importing run {run_id} of experiment '{exp.name}' failed"
         )
 
-    if utils.calling_databricks() and dst_notebook_dir:
+    if in_databricks and utils.calling_databricks() and dst_notebook_dir:
         _upload_databricks_notebook(
             dbx_client, input_dir, src_run_dct, dst_notebook_dir
         )
