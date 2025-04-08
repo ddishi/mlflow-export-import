@@ -126,6 +126,7 @@ def main(
         export_deleted_runs=export_deleted_runs,
         export_version_model=export_version_model,
         export_permissions=export_permissions,
+        skip_download_run_artifacts=skip_download_run_artifacts,
         notebook_formats=notebook_formats,
         use_threads=use_threads,
     )
