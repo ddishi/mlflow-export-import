@@ -174,8 +174,10 @@ def _get_runs(mlflow_client, run_ids, exp, failed_run_ids):
 @opt_export_deleted_runs
 @opt_check_nested_runs
 @opt_notebook_formats
+@opt_skip_download_run_artifacts
 
-def main(experiment, output_dir, run_ids, export_permissions, run_start_time, export_deleted_runs, check_nested_runs, notebook_formats):
+def main(experiment, output_dir, run_ids, export_permissions, skip_download_run_artifacts, run_start_time, export_deleted_runs, 
+         check_nested_runs, notebook_formats):
     _logger.info("Options:")
     for k,v in locals().items():
         _logger.info(f"  {k}: {v}")
@@ -188,6 +190,7 @@ def main(experiment, output_dir, run_ids, export_permissions, run_start_time, ex
         output_dir = output_dir,
         run_ids = run_ids,
         export_permissions = export_permissions,
+        skip_download_run_artifacts = skip_download_run_artifacts,
         run_start_time = run_start_time,
         export_deleted_runs = export_deleted_runs,
         check_nested_runs = check_nested_runs,
