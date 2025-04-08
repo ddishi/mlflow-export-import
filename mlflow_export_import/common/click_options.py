@@ -53,6 +53,15 @@ def opt_export_permissions(function):
     )(function)
     return function
 
+def opt_skip_download_run_artifacts(function):
+    function = click.option("--skip-download-run-artifacts",
+        help="Skip download of run artifacts.",
+        type=bool,
+        default=False,
+        show_default=True
+    )(function)
+    return function
+
 def opt_get_model_version_download_uri(function):
     function = click.option("--get-model-version-download-uri",
         help="Call MLflowClient.get_model_version_download_uri() for version export.",
