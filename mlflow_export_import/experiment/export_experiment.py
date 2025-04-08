@@ -31,17 +31,19 @@ def export_experiment(
         output_dir,
         run_ids = None,
         export_permissions = False,
+        skip_download_run_artifacts = False,
         run_start_time = None,
         export_deleted_runs = False,
         check_nested_runs = False,
         notebook_formats = None,
-        mlflow_client = None
+        mlflow_client = None,
     ):
     """
     :param: experiment_id_or_name: Experiment ID or name.
     :param: output_dir: Output directory.
     :param: run_ids: List of run IDs to export. If None then export all run IDs.
     :param: export_permissions - Export Databricks permissions.
+    :param: skip_download_run_artifacts - Skip downloading run artifacts.
     :param: export_deleted_runs - Export deleted runs.
     :param: check_nested_runs - Check if run in the 'run-ids' option is a parent of nested runs and 
         export all the nested runs.
@@ -80,7 +82,8 @@ def export_experiment(
 
     for run in runs:
         _export_run(mlflow_client, run, output_dir, ok_run_ids, failed_run_ids,
-            run_start_time, run_start_time_str, export_deleted_runs, notebook_formats)
+            run_start_time, run_start_time_str, export_deleted_runs, skip_download_run_artifacts, 
+            notebook_formats)
         num_runs_exported += 1
 
     info_attr = {
@@ -114,7 +117,8 @@ def export_experiment(
 def _export_run(mlflow_client, run, output_dir,
         ok_run_ids, failed_run_ids,
         run_start_time, run_start_time_str,
-        export_deleted_runs, notebook_formats
+        export_deleted_runs, skip_download_run_artifacts,
+        notebook_formats
     ):
     if run_start_time and run.info.start_time < run_start_time:
         msg = {
@@ -130,7 +134,8 @@ def _export_run(mlflow_client, run, output_dir,
         output_dir = os.path.join(output_dir, run.info.run_id),
         export_deleted_runs = export_deleted_runs,
         notebook_formats = notebook_formats,
-        mlflow_client = mlflow_client
+        mlflow_client = mlflow_client,
+        skip_download_run_artifacts = skip_download_run_artifacts
     )
     if is_success:
         ok_run_ids.append(run.info.run_id)
