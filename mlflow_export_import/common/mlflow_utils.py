@@ -40,7 +40,8 @@ def set_experiment(mlflow_client, dbx_client, exp_name, tags=None):
     try:
         if not tags:
             tags = {}
-        tags = utils.create_mlflow_tags_for_databricks_import(tags)
+        if dbx_client:
+            tags = utils.create_mlflow_tags_for_databricks_import(tags)
         exp_id = mlflow_client.create_experiment(exp_name, tags=tags)
         exp = mlflow_client.get_experiment(exp_id)
         _logger.info(
